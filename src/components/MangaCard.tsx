@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 interface MangaCardProps {
   image: string;
   title: string;
@@ -5,8 +7,13 @@ interface MangaCardProps {
 }
 
 export const MangaCard = ({ image, title, genre }: MangaCardProps) => {
+  const navigate = useNavigate();
+  
   return (
-    <div className="group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 hover:shadow-glow hover:scale-105">
+    <div 
+      onClick={() => navigate('/webtoon/1')}
+      className="group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 hover:shadow-glow hover:scale-105"
+    >
       <div className="aspect-[3/4] relative bg-card">
         <img 
           src={image} 
