@@ -1,73 +1,54 @@
-# Welcome to your Lovable project
+# 🌊 Tempura — A Webtoon Alternative on the Stellar Network
 
-## Project info
+Tempura is a decentralized **Webtoon platform** built on the **Stellar Network**, empowering creators with **fair monetization** and transparent ownership through blockchain technology.
 
-**URL**: https://lovable.dev/projects/f5e8fbf7-c62c-4dc4-bce6-a3ffa0040439
+## 🚀 Overview
 
-## How can I edit this code?
+Current Webtoon platforms centralize revenue and restrict creative ownership.  
+**Tempura** solves this by using **Stellar smart contracts** to enable:
+- Direct, transparent payments to artists and writers
+- NFT-based ownership for each episode or comic
+- Open participation in publishing, reading, and supporting creators
 
-There are several ways of editing your application.
+> **Built for the [Scaffold Stellar Hackathon](https://dorahacks.io/hackathon/scaffoldstellar/detail)**
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f5e8fbf7-c62c-4dc4-bce6-a3ffa0040439) and start prompting.
+## ✨ Key Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Creator Monetization** — Seamless micropayments and NFT sales through Stellar
+- **Reader Access** — Discover, read, and collect your favorite series securely
+- **Ownership Proof** — Every published comic episode is stored and owned on-chain
+- **Scalable Architecture** — Powered by Stellar and `stellar-scaffold-cli`
+- **Next.js + Tailwind** frontend for smooth performance and minimal latency
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🧠 Why It Matters
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+> Over **80 million Webtoon users globally** rely on centralized platforms.  
+> Tempura offers them a way to **own their content, earn directly**, and **build communities** without intermediaries.
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## ⚙️ Tech Stack
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- **Frontend:** Next.js, Vite, Tailwind CSS  
+- **Blockchain:** Stellar Network, `stellar-scaffold-cli`  
+- **Languages:** TypeScript, Rust  
+- **Deployment:** Vercel  
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🛠️ Setup Instructions
+
+```bash
+# 1️⃣ Clone the repo
+git clone https://github.com/robin11110000/Tempura.git
+cd Tempura
+
+# 2️⃣ Install dependencies
+npm install
+
+# 3️⃣ Run the development server
 npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/f5e8fbf7-c62c-4dc4-bce6-a3ffa0040439) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
