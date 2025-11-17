@@ -1,6 +1,8 @@
 import { Search, User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ConnectButton } from "thirdweb/react";
+import { client, wallets } from "@/lib/thirdweb";
 import { FeaturedManga } from "@/components/FeaturedManga";
 import { MangaCard } from "@/components/MangaCard";
 import { BottomNav } from "@/components/BottomNav";
@@ -79,6 +81,11 @@ const Index = () => {
           <button onClick={() => setIsSearchOpen(true)} className="text-muted-foreground hover:text-foreground transition-colors">
             <Search className="w-5 h-5" />
           </button>
+          <ConnectButton
+            client={client}
+            wallets={wallets}
+            connectModal={{ size: "compact" }}
+          />
           <button onClick={() => navigate("/settings")} className="w-10 h-10 bg-card rounded-full flex items-center justify-center shadow-glow">
             <User className="w-5 h-5 text-primary" />
           </button>
