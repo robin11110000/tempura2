@@ -3,11 +3,12 @@
 A Decentralized Webtoon Publishing & Reading Platform Powered by Polygon
 
 Tempura is a Polygon-native platform that transforms how Webtoon creators publish, monetize, and protect their work.
+
 Readers unlock Webtoon episodes using on-chain payments, creators mint episodes as NFTs, and all assets live on decentralized storage.
 
 Tempura blends Web3 ownership, creator-first economics, and a smooth reading experience into one platform.
-**
-🎯 Mission**
+
+**🎯 Mission**
 
 To empower Webtoon creators with digital ownership, fair monetization, and global reach—without platform restrictions or middlemen.
 
@@ -15,8 +16,9 @@ To give readers a beautiful reading experience with provable ownership and censo
 
 Polygon’s low fees and scalability make Tempura possible at global scale.
 
-**✨ Core Features
-🖌️ Creator Tools**
+**✨ Core Features**
+
+**🖌️ Creator Tools**
 
 Upload Webtoon episodes (multiple images / panels)
 
@@ -28,7 +30,7 @@ Set creator royalties (ERC-2981)
 
 Manage series and episodes from a dashboard
 
-📚 Reader Experience
+**📚 Reader Experience**
 
 Smooth scrolling Webtoon-style reader (optimized for mobile + desktop)
 
@@ -38,7 +40,7 @@ On-chain ownership verifies access forever
 
 “My Library” shows all owned episodes
 
-💸 On-Chain Economy
+**💸 On-Chain Economy**
 
 Contracts deployed on Polygon Mumbai
 
@@ -50,7 +52,7 @@ Access Manager for content gating
 
 Transparent creator revenue flow
 
-🔐 Wallet Integration
+**🔐 Wallet Integration**
 
 Connect Wallet Button (thirdweb / MetaMask compatible)
 
@@ -58,21 +60,10 @@ Automatic chain switching to Polygon Mumbai
 
 Secure signer for all on-chain actions
 
-🧱 Architecture Overview
-Frontend (React + Vite + TypeScript)
-│
-├── Wallet Integration (thirdweb / ethers v6)
-├── IPFS Upload (nft.storage)
-├── Webtoon Reader UI
-├── Creator Dashboard
-│
-└── Smart Contracts (Hardhat)
-     ├── EpisodeNFT.sol (ERC721 + metadata + royalties)
-     ├── Marketplace.sol (unlock episodes via MATIC)
-     └── AccessManager.sol (ownership → access logic)
-
 Storage: IPFS
+
 Blockchain: Polygon Mumbai Testnet
+
 Explorer: https://mumbai.polygonscan.com
 
 **⚙️ Tech Stack**
@@ -105,32 +96,16 @@ OpenZeppelin ERC-721, ERC-2981
 
 Polygon Mumbai RPC
 
-**📦 Project Structure**
-
-src/
- ├── components/
- ├── pages/
- │    ├── reader/
- │    ├── creator/
- │    └── me/
- ├── lib/
- │    └── ipfs.ts
- ├── config/
- │    └── contracts.ts
-contracts/
- ├── EpisodeNFT.sol
- ├── Marketplace.sol
- └── AccessManager.sol
-scripts/
- └── deploy.ts
-
 **🔧 Local Installation**
 
 1. Clone:
+
 git clone https://github.com/robin11110000/tempura2
+
 cd tempura2
 
 2. Install dependencies:
+
 npm install
 
 3. Environment Variables:
@@ -142,4 +117,5 @@ VITE_NFT_STORAGE_KEY=YOUR_NFT_STORAGE_KEY
 VITE_THIRDWEB_CLIENT_ID=YOUR_CLIENT_ID
 
 4. Run app:
+
 npm run dev
