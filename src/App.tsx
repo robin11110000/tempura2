@@ -10,6 +10,7 @@ import Library from "./pages/Library";
 import Calendar from "./pages/Calendar";
 import Settings from "./pages/Settings";
 import WebtoonDetail from "./pages/WebtoonDetail";
+import MintEpisode from "./pages/creator/MintEpisode";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/webtoon/:id" element={<WebtoonDetail />} />
+            <Route path="/creator/mint" element={<MintEpisode />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
