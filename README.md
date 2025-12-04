@@ -113,7 +113,9 @@ npm install
 Create .env:
 
 VITE_MUMBAI_RPC=https://polygon-mumbai.g.alchemy.com/v2/YOUR_KEY
+
 VITE_NFT_STORAGE_KEY=YOUR_NFT_STORAGE_KEY
+
 VITE_THIRDWEB_CLIENT_ID=YOUR_CLIENT_ID
 
 4. Run app:
