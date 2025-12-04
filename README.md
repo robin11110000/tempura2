@@ -1,4 +1,5 @@
 **🍤 TEMPURA**
+
 A Decentralized Webtoon Publishing & Reading Platform Powered by Polygon
 
 Tempura is a Polygon-native platform that transforms how Webtoon creators publish, monetize, and protect their work.
