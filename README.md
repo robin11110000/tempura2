@@ -1,12 +1,12 @@
-🍤 TEMPURA
+**🍤 TEMPURA**
 A Decentralized Webtoon Publishing & Reading Platform Powered by Polygon
 
 Tempura is a Polygon-native platform that transforms how Webtoon creators publish, monetize, and protect their work.
 Readers unlock Webtoon episodes using on-chain payments, creators mint episodes as NFTs, and all assets live on decentralized storage.
 
 Tempura blends Web3 ownership, creator-first economics, and a smooth reading experience into one platform.
-
-🎯 Mission
+**
+🎯 Mission**
 
 To empower Webtoon creators with digital ownership, fair monetization, and global reach—without platform restrictions or middlemen.
 
@@ -14,8 +14,8 @@ To give readers a beautiful reading experience with provable ownership and censo
 
 Polygon’s low fees and scalability make Tempura possible at global scale.
 
-✨ Core Features
-🖌️ Creator Tools
+**✨ Core Features
+🖌️ Creator Tools**
 
 Upload Webtoon episodes (multiple images / panels)
 
@@ -73,7 +73,9 @@ Frontend (React + Vite + TypeScript)
 Storage: IPFS
 Blockchain: Polygon Mumbai Testnet
 Explorer: https://mumbai.polygonscan.com
-⚙️ Tech Stack
+
+**⚙️ Tech Stack**
+
 Frontend
 
 React
@@ -102,7 +104,8 @@ OpenZeppelin ERC-721, ERC-2981
 
 Polygon Mumbai RPC
 
-📦 Project Structure
+**📦 Project Structure**
+
 src/
  ├── components/
  ├── pages/
@@ -120,7 +123,8 @@ contracts/
 scripts/
  └── deploy.ts
 
-🔧 Local Installation
+**🔧 Local Installation**
+
 1. Clone:
 git clone https://github.com/robin11110000/tempura2
 cd tempura2
