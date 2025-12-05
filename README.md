@@ -1,123 +1,152 @@
-**🍤 TEMPURA**
 
-A Decentralized Webtoon Publishing & Reading Platform Powered by Polygon
+# 🌊 **Tempura — A Decentralized Webtoon Platform Powered by Linera Microchains**
 
-Tempura is a Polygon-native platform that transforms how Webtoon creators publish, monetize, and protect their work.
+Tempura is a next-generation Webtoon platform built on the **Linera blockchain**, designed to give creators ownership, real-time audience engagement, and on-chain monetization.
+Every creator, series, and episode is backed by verifiable on-chain state stored across **Linera microchains**, enabling a scalable, low-latency reading and publishing experience.
 
-Readers unlock Webtoon episodes using on-chain payments, creators mint episodes as NFTs, and all assets live on decentralized storage.
+---
 
-Tempura blends Web3 ownership, creator-first economics, and a smooth reading experience into one platform.
+## 🚀 Vision
 
-**🎯 Mission**
+Traditional Webtoon platforms centralize data, revenue, and creative ownership.
+Tempura flips this model:
 
-To empower Webtoon creators with digital ownership, fair monetization, and global reach—without platform restrictions or middlemen.
+* **Creators own their microchains**
+* **Readers interact in real-time**
+* **Episodes and metadata live on-chain**
+* **Fan engagement + tipping + unlocks are built into the protocol**
 
-To give readers a beautiful reading experience with provable ownership and censorship-resistant access.
+Tempura is designed for the **Linera Buildathon** and showcases how microchain-native apps can deliver real-time, creator-centric digital publishing.
 
-Polygon’s low fees and scalability make Tempura possible at global scale.
+---
 
-**✨ Core Features**
+# 🔮 Core Features
 
-**🖌️ Creator Tools**
+## ⭐ ** On-Chain Publishing Protocol**
 
-Upload Webtoon episodes (multiple images / panels)
+* Linera AppChain smart contract (WASM)
+* Register creators + their personal microchains
+* Create series
+* Publish episodes (metadata + IPFS CIDs)
+* Retrieve series & episode data through Linera GraphQL
 
-Store media and metadata on IPFS
+## ⭐ ** Full Creator Tools**
 
-Mint episodes as ERC-721 NFTs
+* Creator Dashboard
+* Series creation
+* Episode uploading (multi-image)
+* IPFS upload via Web3.Storage
+* Publish episodes directly to the AppChain
+* Contract address automatically shown in the UI
 
-Set creator royalties (ERC-2981)
+## ⭐ **Real-Time Reader Experience**
 
-Manage series and episodes from a dashboard
+* Episode reader page
+* Unlock episodes (on-chain, signed)
+* Real-time comments and reactions
+* CreatorChain + AppChain metadata display in UI
+* Persistent library, bookmarks, and history
 
-**📚 Reader Experience**
+## ⭐ **Token Economy**
 
-Smooth scrolling Webtoon-style reader (optimized for mobile + desktop)
+* Daily token claim (24h cooldown)
+* Tip creators on-chain
+* Wallet balance displayed globally
+* CreatorChain activity feeds
+* Series-based engagement metrics
 
-Locked episodes until purchased with MATIC
+---
 
-On-chain ownership verifies access forever
+# 🧱 Architecture Overview
 
-“My Library” shows all owned episodes
+Tempura uses **Linera’s microchain model**:
 
-**💸 On-Chain Economy**
+| Component                       | Chain Type               | Description                                                     |
+| ------------------------------- | ------------------------ | --------------------------------------------------------------- |
+| **AppChain (Webtoon Contract)** | Linera application chain | Stores global registry, series, and marketplace logic           |
+| **CreatorChain**                | Personal microchain      | Every creator owns a chain storing their series + episode state |
+| **Reader**                      | Wallet address           | Unlocks episodes and interacts with AppChain + CreatorChain     |
+| **GraphQL Service**             | `linera-service`         | Provides read/write access to chains for the frontend           |
 
-Contracts deployed on Polygon Mumbai
+Frontend calls Linera through:
 
-EpisodeNFT contract for minting
+```
+src/lib/linera.ts → GraphQL → Linera nodes → Contract state
+```
 
-Marketplace contract to buy/unlock episodes
+---
 
-Access Manager for content gating
+# 📦 Tech Stack
 
-Transparent creator revenue flow
+* **Frontend:** React + Vite + shadcn/ui
+* **Blockchain:** Linera (Rust smart contracts → WASM → AppChain + microchains)
+* **Storage:** IPFS via Web3.Storage
+* **Wallet:** Linera wallet CLI (localnet)
+* **Language:** TypeScript + Rust
 
-**🔐 Wallet Integration**
+---
 
-Connect Wallet Button (thirdweb / MetaMask compatible)
+# 🖼️ Microchain IDs & Contract Address in UI
 
-Automatic chain switching to Polygon Mumbai
+Tempura shows on-chain metadata inside the app:
 
-Secure signer for all on-chain actions
+* App contract address: Settings → **On-chain Info**
+* CreatorChain ID: Series header → **CreatorChain**
+* Episode unlock / publish events reference these addresses
 
-Storage: IPFS
+This makes the system transparent for auditors & judges.
 
-Blockchain: Polygon Mumbai Testnet
+---
 
-Explorer: https://mumbai.polygonscan.com
+# 🌐 Frontend Commands
 
-**⚙️ Tech Stack**
-
-Frontend
-
-React
-
-Vite
-
-TypeScript
-
-TailwindCSS
-
-ShadCN UI
-
-thirdweb (wallet + signer)
-
-viem / ethers v6
-
-nft.storage
-
-Backend / Contracts
-
-Solidity 0.8.x
-
-Hardhat
-
-OpenZeppelin ERC-721, ERC-2981
-
-Polygon Mumbai RPC
-
-**🔧 Local Installation**
-
-1. Clone:
-
-git clone https://github.com/robin11110000/tempura2
-
-cd tempura2
-
-2. Install dependencies:
-
+```bash
 npm install
-
-3. Environment Variables:
-
-Create .env:
-
-VITE_MUMBAI_RPC=https://polygon-mumbai.g.alchemy.com/v2/YOUR_KEY
-
-VITE_NFT_STORAGE_KEY=YOUR_NFT_STORAGE_KEY
-
-VITE_THIRDWEB_CLIENT_ID=YOUR_CLIENT_ID
-
-4. Run app:
-
 npm run dev
+```
+
+Visit:
+
+```
+http://localhost:5173
+```
+
+---
+
+# 💾 Publishing Episodes (Flow)
+
+1. Connect wallet
+2. Go to **Creator Dashboard** → New Series
+3. Upload cover → Publish series
+4. Go to **Publish Episode**
+5. Upload images → IPFS stores them → AppChain stores metadata
+6. Reader sees the episode instantly in Explore + Home feeds
+
+---
+
+# 🧪 What Judges Should Test
+
+✔ Create a creator microchain
+✔ Register creator via UI / GraphQL
+✔ Publish a series
+✔ Upload an episode
+✔ View contract + microchain IDs in Settings
+✔ Unlock an episode (on-chain)
+✔ Post a comment (real-time)
+✔ Tip a creator (token transfer)
+✔ Check balance before & after claims
+
+---
+
+# 🏆 Why This Project Matters
+
+* Demonstrates **real-world microchain usage**
+* Showcases **Linera’s low-latency, horizontal scaling model**
+* Applies Web3 to a **100M+ reader market**
+* Builds a decentralized creator economy
+* Includes Waves 1–4, making it a complete hackathon-ready MVP
+
+---
+
+
+
