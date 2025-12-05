@@ -15,6 +15,7 @@ import CreatorSeries from "./pages/creator/Series";
 import NewSeries from "./pages/creator/NewSeries";
 import PublishEpisode from "./pages/creator/Publish";
 import MintEpisode from "./pages/creator/MintEpisode";
+import EpisodeReader from "./pages/EpisodeReader";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/creator/new-series" element={<NewSeries />} />
             <Route path="/creator/publish" element={<PublishEpisode />} />
             <Route path="/creator/mint" element={<MintEpisode />} />
+            <Route path="/series/:id/episode/:ep" element={<EpisodeReader />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

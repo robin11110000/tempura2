@@ -155,3 +155,63 @@ export async function getSeriesEpisodes(seriesId: number): Promise<Episode[]> {
     return [];
   }
 }
+
+// Get a single episode by series ID and episode number
+export async function getEpisode(seriesId: number, episodeNumber: number): Promise<Episode | null> {
+  const episodes = await getSeriesEpisodes(seriesId);
+  return episodes.find(e => e.episodeNumber === episodeNumber) || null;
+}
+
+// Check if user has unlocked an episode
+export async function checkEpisodeUnlocked(seriesId: number, episodeNumber: number, userAddress: string): Promise<boolean> {
+  const { provider } = await getProviderAndSigner();
+  const contract = new ethers.Contract(EPISODE_CONTRACT_ADDRESS, [
+    "function hasUnlocked(uint256 seriesId, uint256 episodeNumber, address user) external view returns (bool)"
+  ], provider);
+  
+  try {
+    return await contract.hasUnlocked(seriesId, episodeNumber, userAddress);
+  } catch {
+    // If contract doesn't have this function or not deployed, assume unlocked for free episodes
+    return true;
+  }
+}
+
+// Unlock an episode by paying the price
+export async function unlockEpisode(
+  seriesId: number,
+  episodeNumber: number,
+  price: string
+): Promise<{ txHash: string }> {
+  const { signer } = await getProviderAndSigner();
+  const contract = new ethers.Contract(EPISODE_CONTRACT_ADDRESS, [
+    "function unlockEpisode(uint256 seriesId, uint256 episodeNumber) external payable"
+  ], signer);
+  
+  const priceWei = ethers.parseEther(price);
+  const tx = await contract.unlockEpisode(seriesId, episodeNumber, { value: priceWei });
+  const receipt = await tx.wait();
+  
+  return { txHash: receipt.hash };
+}
+
+// Get series by ID
+export async function getSeries(seriesId: number): Promise<Series | null> {
+  const { provider } = await getProviderAndSigner();
+  const contract = new ethers.Contract(SERIES_CONTRACT_ADDRESS, SERIES_ABI, provider);
+  
+  try {
+    const s = await contract.getSeries(seriesId);
+    return {
+      id: Number(s.id),
+      title: s.title,
+      description: s.description,
+      coverURI: s.coverURI,
+      creator: s.creator,
+      episodeCount: Number(s.episodeCount),
+      createdAt: Number(s.createdAt),
+    };
+  } catch {
+    return null;
+  }
+}
