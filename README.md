@@ -1,8 +1,8 @@
 
-# 🌊 **Tempura — A Decentralized Webtoon Platform Powered by Linera Microchains**
+# 🌊 **Tempura — A Decentralized Webtoon Platform Powered by Massa Network**
 
-Tempura is a next-generation Webtoon platform built on the **Linera blockchain**, designed to give creators ownership, real-time audience engagement, and on-chain monetization.
-Every creator, series, and episode is backed by verifiable on-chain state stored across **Linera microchains**, enabling a scalable, low-latency reading and publishing experience.
+Tempura is a next-generation Webtoon platform built on the **Massa Network**, designed to give creators ownership, real-time audience engagement, and on-chain monetization.
+Every creator, series, and episode is backed by verifiable on-chain state stored across Massa’s infrastructure, enabling a scalable, low-latency reading and publishing experience.
 
 ---
 
@@ -11,12 +11,12 @@ Every creator, series, and episode is backed by verifiable on-chain state stored
 Traditional Webtoon platforms centralize data, revenue, and creative ownership.
 Tempura flips this model:
 
-* **Creators own their microchains**
+* **Creators own their own on-chain identity/state**
 * **Readers interact in real-time**
 * **Episodes and metadata live on-chain**
 * **Fan engagement + tipping + unlocks are built into the protocol**
 
-Tempura is designed for the **Linera Buildathon** and showcases how microchain-native apps can deliver real-time, creator-centric digital publishing.
+Tempura is designed for the **Massa Hackathon** and showcases how Massa-native apps can deliver real-time, creator-centric digital publishing.
 
 ---
 
@@ -24,11 +24,11 @@ Tempura is designed for the **Linera Buildathon** and showcases how microchain-n
 
 ## ⭐ ** On-Chain Publishing Protocol**
 
-* Linera AppChain smart contract (WASM)
-* Register creators + their personal microchains
+* Massa smart contract (e.g. via WebAssembly or native smart-contract framework)
+* Register creators + their on-chain identity/account
 * Create series
 * Publish episodes (metadata + IPFS CIDs)
-* Retrieve series & episode data through Linera GraphQL
+* Retrieve series & episode data through a Massa-compatible API / GraphQL / RPC service
 
 ## ⭐ ** Full Creator Tools**
 
@@ -36,42 +36,42 @@ Tempura is designed for the **Linera Buildathon** and showcases how microchain-n
 * Series creation
 * Episode uploading (multi-image)
 * IPFS upload via Web3.Storage
-* Publish episodes directly to the AppChain
-* Contract address automatically shown in the UI
+* Publish episodes directly to the contract on Massa
+* Contract address / creator account automatically shown in the UI
 
 ## ⭐ **Real-Time Reader Experience**
 
 * Episode reader page
 * Unlock episodes (on-chain, signed)
-* Real-time comments and reactions
-* CreatorChain + AppChain metadata display in UI
+* Real-time comments and reactions (via on-chain events or off-chain + on-chain hybrid)
+* On-chain metadata displayed in UI
 * Persistent library, bookmarks, and history
 
 ## ⭐ **Token Economy**
 
 * Daily token claim (24h cooldown)
-* Tip creators on-chain
+* Tip creators on-chain (Massa native token)
 * Wallet balance displayed globally
-* CreatorChain activity feeds
+* Creator activity feeds
 * Series-based engagement metrics
 
 ---
 
 # 🧱 Architecture Overview
 
-Tempura uses **Linera’s microchain model**:
+Tempura uses a **Massa-based model**:
 
-| Component                       | Chain Type               | Description                                                     |
-| ------------------------------- | ------------------------ | --------------------------------------------------------------- |
-| **AppChain (Webtoon Contract)** | Linera application chain | Stores global registry, series, and marketplace logic           |
-| **CreatorChain**                | Personal microchain      | Every creator owns a chain storing their series + episode state |
-| **Reader**                      | Wallet address           | Unlocks episodes and interacts with AppChain + CreatorChain     |
-| **GraphQL Service**             | `linera-service`         | Provides read/write access to chains for the frontend           |
+| Component                          | On-chain / Off-chain Type                          | Description                                                       |
+| ---------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------- |
+| **Main Contract (Publishing Hub)** | Massa smart contract / Program                     | Stores global registry: creators, series index, episode metadata  |
+| **Creator Account / Sub-State**    | Creator’s on-chain identity/account                | Each creator owns an on-chain account holding their content/state |
+| **Reader**                         | Wallet address / Account                           | Unlocks episodes and interacts with contract + creator account    |
+| **API / GraphQL / RPC Service**    | Off-chain server interacting with Massa blockchain | Provides read/write access for frontend to contract and state     |
 
-Frontend calls Linera through:
+Frontend calls Massa through:
 
 ```
-src/lib/linera.ts → GraphQL → Linera nodes → Contract state
+src/lib/massa.ts → JSON-RPC / Massa API → Contract + Account state → UI
 ```
 
 ---
@@ -79,20 +79,20 @@ src/lib/linera.ts → GraphQL → Linera nodes → Contract state
 # 📦 Tech Stack
 
 * **Frontend:** React + Vite + shadcn/ui
-* **Blockchain:** Linera (Rust smart contracts → WASM → AppChain + microchains)
+* **Blockchain:** Massa Network (smart contracts / programs + accounts)
 * **Storage:** IPFS via Web3.Storage
-* **Wallet:** Linera wallet CLI (localnet)
-* **Language:** TypeScript + Rust
+* **Wallet:** Massa-compatible wallet (e.g. Web wallet, CLI wallet)
+* **Language:** TypeScript + smart-contract language supported by Massa
 
 ---
 
-# 🖼️ Microchain IDs & Contract Address in UI
+# 🖼️ On-Chain IDs & Contract / Account Info in UI
 
 Tempura shows on-chain metadata inside the app:
 
-* App contract address: Settings → **On-chain Info**
-* CreatorChain ID: Series header → **CreatorChain**
-* Episode unlock / publish events reference these addresses
+* Contract address: Settings → **On-chain Info**
+* Creator account / identity: Series header → **Creator Account**
+* Episode unlock / publish events reference these on-chain addresses / IDs
 
 This makes the system transparent for auditors & judges.
 
@@ -115,38 +115,32 @@ http://localhost:5173
 
 # 💾 Publishing Episodes (Flow)
 
-1. Connect wallet
+1. Connect wallet (Massa)
 2. Go to **Creator Dashboard** → New Series
 3. Upload cover → Publish series
 4. Go to **Publish Episode**
-5. Upload images → IPFS stores them → AppChain stores metadata
+5. Upload images → IPFS stores them → Contract stores metadata on Massa
 6. Reader sees the episode instantly in Explore + Home feeds
 
 ---
 
 # 🧪 What Judges Should Test
 
-✔ Create a creator microchain
-✔ Register creator via UI / GraphQL
+✔ Register creator via UI / RPC
 ✔ Publish a series
-✔ Upload an episode
-✔ View contract + microchain IDs in Settings
+✔ Upload an episode with metadata + IPFS link
+✔ View contract & creator account info in Settings
 ✔ Unlock an episode (on-chain)
-✔ Post a comment (real-time)
+✔ Post a comment (real-time or hybrid)
 ✔ Tip a creator (token transfer)
-✔ Check balance before & after claims
+✔ Check balance before & after claims / transfers
 
 ---
 
 # 🏆 Why This Project Matters
 
-* Demonstrates **real-world microchain usage**
-* Showcases **Linera’s low-latency, horizontal scaling model**
+* Demonstrates **real-world usage of Massa’s on-chain capabilities**
+* Showcases how on-chain publishing + token economics can enable a **decentralized creator economy**
 * Applies Web3 to a **100M+ reader market**
-* Builds a decentralized creator economy
-* Includes Waves 1–4, making it a complete hackathon-ready MVP
-
----
-
-
+* Provides a full hackathon-ready MVP
 
