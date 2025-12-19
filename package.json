@@ -62,7 +62,9 @@
     "tailwindcss-animate": "^1.0.7",
     "thirdweb": "^5.112.1",
     "vaul": "^0.9.9",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "@linera/client": "0.15.8",
+    "@linera/signer": "0.15.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",

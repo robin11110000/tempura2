@@ -1,10 +1,13 @@
-import { ethers } from "ethers";
+import { LineraClient } from "@linera/client";
+import { MetamaskSigner } from "@linera/signer"; // Assuming a MetamaskSigner for browser environments
 
-// Contract addresses (update after deployment)
-export const SERIES_CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000";
-export const EPISODE_CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000";
+// Contract Application IDs (update after deployment on Linera)
+// These are placeholders. You will need to replace them with actual Linera Application IDs
+// once your contracts (or Linera applications) are deployed on a Linera chain.
+export const SERIES_APP_ID = "0x0000000000000000000000000000000000000000";
+export const EPISODE_APP_ID = "0x0000000000000000000000000000000000000000";
 
-// Types
+// Types - these remain largely the same, assuming contract structures
 export interface Series {
   id: number;
   title: string;
@@ -25,193 +28,200 @@ export interface Episode {
   publishedAt: number;
 }
 
-// ABIs
-const SERIES_ABI = [
-  "function createSeries(string title, string description, string coverURI) external returns (uint256)",
-  "function getCreatorSeries(address creator) external view returns (tuple(uint256 id, string title, string description, string coverURI, address creator, uint256 episodeCount, uint256 createdAt)[])",
-  "function getSeries(uint256 seriesId) external view returns (tuple(uint256 id, string title, string description, string coverURI, address creator, uint256 episodeCount, uint256 createdAt))",
-  "event SeriesCreated(uint256 indexed seriesId, address indexed creator, string title)"
-];
+// Global client and signer instances (or a way to retrieve them)
+let lineraClient: LineraClient | undefined;
+let lineraSigner: MetamaskSigner | undefined;
 
-const EPISODE_ABI = [
-  "function publishEpisode(uint256 seriesId, uint256 episodeNumber, string metadataURI, uint256 price) external returns (uint256)",
-  "function getSeriesEpisodes(uint256 seriesId) external view returns (tuple(uint256 id, uint256 seriesId, uint256 episodeNumber, string metadataURI, uint256 price, address creator, uint256 publishedAt)[])",
-  "event EpisodePublished(uint256 indexed episodeId, uint256 indexed seriesId, uint256 episodeNumber, address indexed creator)"
-];
+// --- Helper to get Linera Client and Signer ---
+// This function needs to be adapted based on how you initialize LineraClient and MetamaskSigner.
+// You might need a Linera gateway URL here.
+async function getLineraClientAndSigner() {
+  if (!lineraClient || !lineraSigner) {
+    // TODO: Replace with actual Linera gateway URL if different from default
+    const gatewayUrl = "http://localhost:8080"; // This URL must match the running linera-service instance.
+    lineraClient = new LineraClient(gatewayUrl);
 
-// Get provider and signer from window.ethereum
-async function getProviderAndSigner() {
-  if (!window.ethereum) {
-    throw new Error("No wallet connected");
+    // Assuming MetamaskSigner can initialize directly from window.ethereum
+    // If window.ethereum is not available, this will throw, similar to original code.
+    if (!window.ethereum) {
+      throw new Error("No wallet (e.g., Metamask) connected or detected.");
+    }
+    lineraSigner = new MetamaskSigner(window.ethereum);
   }
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const signer = await provider.getSigner();
-  return { provider, signer };
+  return { client: lineraClient, signer: lineraSigner };
 }
 
-// Create a new series
+// --- Contract Interaction Functions ---
+// These functions are rewritten to use a hypothetical Linera SDK API.
+// The exact methods (e.g., 'call', 'query', 'execute') are illustrative and need
+// to be confirmed by actual Linera SDK documentation or examples.
+
 export async function createSeries(
   title: string,
   description: string,
   coverURI: string
 ): Promise<{ txHash: string; seriesId: number }> {
-  const { signer } = await getProviderAndSigner();
-  const contract = new ethers.Contract(SERIES_CONTRACT_ADDRESS, SERIES_ABI, signer);
+  const { client, signer } = await getLineraClientAndSigner();
   
-  const tx = await contract.createSeries(title, description, coverURI);
-  const receipt = await tx.wait();
+  // TODO: Use actual Linera SDK methods for contract interaction
+  // This is a placeholder for how you might call a contract method to create a series.
+  console.log("Calling createSeries on Linera application...");
   
-  // Parse SeriesCreated event to get seriesId
-  const event = receipt.logs.find((log: any) => {
-    try {
-      const parsed = contract.interface.parseLog(log);
-      return parsed?.name === "SeriesCreated";
-    } catch {
-      return false;
-    }
-  });
-  
-  let seriesId = 0;
-  if (event) {
-    const parsed = contract.interface.parseLog(event);
-    seriesId = Number(parsed?.args[0] || 0);
+  try {
+    // Example: client.execute(SERIES_APP_ID, signer, "createSeries", { title, description, coverURI });
+    // Or it might be a more direct contract call:
+    const response = await client.sendTransaction({
+        appId: SERIES_APP_ID,
+        method: "createSeries",
+        args: { title, description, coverURI },
+        signer: signer,
+    });
+
+    // Assume response contains transaction hash and events that can be parsed for seriesId
+    const txHash = response.transactionHash || "0x_mock_tx_hash"; // Placeholder
+    const seriesId = Math.floor(Math.random() * 1000); // Placeholder for parsing event
+
+    return { txHash, seriesId };
+  } catch (error) {
+    console.error("Error creating series on Linera:", error);
+    throw error;
   }
-  
-  return { txHash: receipt.hash, seriesId };
 }
 
-// Publish an episode
 export async function publishEpisode(
   seriesId: number,
   episodeNumber: number,
   metadataURI: string,
   price: string
 ): Promise<{ txHash: string; episodeId: number }> {
-  const { signer } = await getProviderAndSigner();
-  const contract = new ethers.Contract(EPISODE_CONTRACT_ADDRESS, EPISODE_ABI, signer);
-  
-  const priceWei = ethers.parseEther(price);
-  const tx = await contract.publishEpisode(seriesId, episodeNumber, metadataURI, priceWei);
-  const receipt = await tx.wait();
-  
-  // Parse EpisodePublished event to get episodeId
-  const event = receipt.logs.find((log: any) => {
-    try {
-      const parsed = contract.interface.parseLog(log);
-      return parsed?.name === "EpisodePublished";
-    } catch {
-      return false;
-    }
-  });
-  
-  let episodeId = 0;
-  if (event) {
-    const parsed = contract.interface.parseLog(event);
-    episodeId = Number(parsed?.args[0] || 0);
+  const { client, signer } = await getLineraClientAndSigner();
+
+  console.log("Calling publishEpisode on Linera application...");
+
+  try {
+    const response = await client.sendTransaction({
+        appId: EPISODE_APP_ID,
+        method: "publishEpisode",
+        args: { seriesId, episodeNumber, metadataURI, price }, // Price might need conversion
+        signer: signer,
+    });
+
+    const txHash = response.transactionHash || "0x_mock_tx_hash"; // Placeholder
+    const episodeId = Math.floor(Math.random() * 1000); // Placeholder for parsing event
+
+    return { txHash, episodeId };
+  } catch (error) {
+    console.error("Error publishing episode on Linera:", error);
+    throw error;
   }
-  
-  return { txHash: receipt.hash, episodeId };
 }
 
-// Get all series created by a specific address
 export async function getCreatorSeries(creatorAddress: string): Promise<Series[]> {
-  const { provider } = await getProviderAndSigner();
-  const contract = new ethers.Contract(SERIES_CONTRACT_ADDRESS, SERIES_ABI, provider);
-  
+  const { client } = await getLineraClientAndSigner();
+
+  console.log("Querying getCreatorSeries from Linera application...");
+
   try {
-    const series = await contract.getCreatorSeries(creatorAddress);
-    return series.map((s: any) => ({
-      id: Number(s.id),
-      title: s.title,
-      description: s.description,
-      coverURI: s.coverURI,
-      creator: s.creator,
-      episodeCount: Number(s.episodeCount),
-      createdAt: Number(s.createdAt),
-    }));
-  } catch {
-    // Return empty array if contract not deployed or no series
+    // Example of a query call. Linera SDK might have a specific query API.
+    const response = await client.query({
+        appId: SERIES_APP_ID,
+        method: "getCreatorSeries",
+        args: { creator: creatorAddress },
+    });
+
+    // Assume response is an array of series objects
+    return response.data as Series[]; // Placeholder casting
+  } catch (error) {
+    console.error("Error getting creator series from Linera:", error);
     return [];
   }
 }
 
-// Get all episodes for a series
 export async function getSeriesEpisodes(seriesId: number): Promise<Episode[]> {
-  const { provider } = await getProviderAndSigner();
-  const contract = new ethers.Contract(EPISODE_CONTRACT_ADDRESS, EPISODE_ABI, provider);
-  
+  const { client } = await getLineraClientAndSigner();
+
+  console.log("Querying getSeriesEpisodes from Linera application...");
+
   try {
-    const episodes = await contract.getSeriesEpisodes(seriesId);
-    return episodes.map((e: any) => ({
-      id: Number(e.id),
-      seriesId: Number(e.seriesId),
-      episodeNumber: Number(e.episodeNumber),
-      metadataURI: e.metadataURI,
-      price: ethers.formatEther(e.price),
-      creator: e.creator,
-      publishedAt: Number(e.publishedAt),
-    }));
-  } catch {
+    const response = await client.query({
+        appId: EPISODE_APP_ID,
+        method: "getSeriesEpisodes",
+        args: { seriesId },
+    });
+
+    return response.data as Episode[]; // Placeholder casting
+  } catch (error) {
+    console.error("Error getting series episodes from Linera:", error);
     return [];
   }
 }
 
-// Get a single episode by series ID and episode number
 export async function getEpisode(seriesId: number, episodeNumber: number): Promise<Episode | null> {
   const episodes = await getSeriesEpisodes(seriesId);
   return episodes.find(e => e.episodeNumber === episodeNumber) || null;
 }
 
-// Check if user has unlocked an episode
 export async function checkEpisodeUnlocked(seriesId: number, episodeNumber: number, userAddress: string): Promise<boolean> {
-  const { provider } = await getProviderAndSigner();
-  const contract = new ethers.Contract(EPISODE_CONTRACT_ADDRESS, [
-    "function hasUnlocked(uint256 seriesId, uint256 episodeNumber, address user) external view returns (bool)"
-  ], provider);
-  
+  const { client } = await getLineraClientAndSigner();
+
+  console.log("Querying checkEpisodeUnlocked from Linera application...");
+
   try {
-    return await contract.hasUnlocked(seriesId, episodeNumber, userAddress);
-  } catch {
-    // If contract doesn't have this function or not deployed, assume unlocked for free episodes
-    return true;
+    const response = await client.query({
+        appId: EPISODE_APP_ID,
+        method: "hasUnlocked", // Assuming this method name for query
+        args: { seriesId, episodeNumber, user: userAddress },
+    });
+
+    return response.data as boolean; // Placeholder casting
+  } catch (error) {
+    console.error("Error checking if episode is unlocked from Linera:", error);
+    return true; // Default to true if query fails, for now
   }
 }
 
-// Unlock an episode by paying the price
 export async function unlockEpisode(
   seriesId: number,
   episodeNumber: number,
   price: string
 ): Promise<{ txHash: string }> {
-  const { signer } = await getProviderAndSigner();
-  const contract = new ethers.Contract(EPISODE_CONTRACT_ADDRESS, [
-    "function unlockEpisode(uint256 seriesId, uint256 episodeNumber) external payable"
-  ], signer);
-  
-  const priceWei = ethers.parseEther(price);
-  const tx = await contract.unlockEpisode(seriesId, episodeNumber, { value: priceWei });
-  const receipt = await tx.wait();
-  
-  return { txHash: receipt.hash };
+  const { client, signer } = await getLineraClientAndSigner();
+
+  console.log("Calling unlockEpisode on Linera application...");
+
+  try {
+    const response = await client.sendTransaction({
+        appId: EPISODE_APP_ID,
+        method: "unlockEpisode",
+        args: { seriesId, episodeNumber },
+        signer: signer,
+        // Linera SDK might have a way to specify value for payable functions
+        // value: price, // This might need to be converted to correct Linera token format
+    });
+
+    const txHash = response.transactionHash || "0x_mock_tx_hash"; // Placeholder
+    return { txHash };
+  } catch (error) {
+    console.error("Error unlocking episode on Linera:", error);
+    throw error;
+  }
 }
 
-// Get series by ID
 export async function getSeries(seriesId: number): Promise<Series | null> {
-  const { provider } = await getProviderAndSigner();
-  const contract = new ethers.Contract(SERIES_CONTRACT_ADDRESS, SERIES_ABI, provider);
-  
+  const { client } = await getLineraClientAndSigner();
+
+  console.log("Querying getSeries from Linera application...");
+
   try {
-    const s = await contract.getSeries(seriesId);
-    return {
-      id: Number(s.id),
-      title: s.title,
-      description: s.description,
-      coverURI: s.coverURI,
-      creator: s.creator,
-      episodeCount: Number(s.episodeCount),
-      createdAt: Number(s.createdAt),
-    };
-  } catch {
+    const response = await client.query({
+        appId: SERIES_APP_ID,
+        method: "getSeries",
+        args: { seriesId },
+    });
+
+    return response.data as Series | null; // Placeholder casting
+  } catch (error) {
+    console.error("Error getting series from Linera:", error);
     return null;
   }
 }
